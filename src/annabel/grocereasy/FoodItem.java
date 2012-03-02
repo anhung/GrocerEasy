@@ -5,6 +5,7 @@ public class FoodItem {
     private String m_name;          // Name of the food item
     private double m_quantity;      // Quantity of item to buy
     private String m_measurement;   // Measurement associated with quantity
+    private String m_notes;
     
     /**
      * Default constructor. Just for testing.
@@ -14,6 +15,7 @@ public class FoodItem {
         m_name = new String("Banana");
         m_quantity = 2;
         m_measurement = new String("piece");
+        m_notes = new String("Lalalala these are some notes!");
     }
     
     /**
@@ -23,10 +25,11 @@ public class FoodItem {
      * @param quantity how much the user wants to buy
      * @param measurement unit of measurement associated with quantity
      */
-    public FoodItem(String name, double quantity, String measurement) {
+    public FoodItem(String name, double quantity, String measurement, String notes) {
         m_name = new String(name);
         m_quantity = quantity;
         m_measurement = new String(measurement);
+        m_notes = new String(notes);
     }
     
     /**
@@ -57,6 +60,15 @@ public class FoodItem {
     }
     
     /**
+     * Returns this food item's notes.
+     * 
+     * @return the notes
+     */
+    public String getNotes() {
+        return m_notes;
+    }
+    
+    /**
      * Set this food item's name.
      * 
      * @param newName the new name
@@ -82,4 +94,23 @@ public class FoodItem {
     public void setMeasurement(String newMeasurement) {
         m_measurement = newMeasurement;
     }
+    
+    /**
+     * Set this food item's new notes.
+     * 
+     * @param notes the new notes
+     */
+    public void setNotes(String notes) {
+        m_notes = new String(notes);
+    }
+    
+    @Override
+    public String toString() {
+        return getName();
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        return ((FoodItem)o).toString().equals(toString());
+    }    
 }

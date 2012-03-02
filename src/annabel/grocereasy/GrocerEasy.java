@@ -17,9 +17,10 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
     
     private Button b_newList;                       // to create new list
     private TextView tv_logo;                       // to display app name
-    private ListView myListView;                    // for displaying the grocery lists
-    private ArrayList<String> groceryListNames;     // list of grocery list names
-    private ArrayAdapter<String> glAdapter;         // adapter for groceryListNames
+    private ListView myListView;                    // for displaying items
+    private ArrayList<String> itemNames;            // list of item names
+    private ArrayAdapter<String> itemAdapter;       // adapter for itemNames
+    private MyDBAdapter dbAdapter;                  // adapter for database
     
     /**
      * Android magic :)
@@ -31,7 +32,14 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
         setupGroceryLists();
         setupViews();
         setupListeners();
+        setupDB();
     }
+    
+    private void setupDB() {
+        dbAdapter = new MyDBAdapter(this);
+        dbAdapter.open();
+    }
+    
     
     /**
      * Helper function to load in the views from the layout, and
@@ -40,9 +48,9 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
     private void setupViews() {
         b_newList = (Button) findViewById(R.id.b_newList);
         tv_logo = (TextView) findViewById(R.id.tv_logo);
-        myListView = (ListView) findViewById(R.id.lv_groceryListList);
-        glAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, groceryListNames);
-        myListView.setAdapter(glAdapter);         
+        myListView = (ListView) findViewById(R.id.lv_groceryList);
+        itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemNames);
+        myListView.setAdapter(itemAdapter);         
     }
     
     /**
@@ -51,10 +59,10 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
      * Will change to actually load in grocery list names.
      */
     private void setupGroceryLists() {
-        groceryListNames = new ArrayList<String>();
+        itemNames = new ArrayList<String>();
         String[] categories = getResources().getStringArray(R.array.categories);
         for (int i = 0; i < categories.length; i++) {
-            groceryListNames.add(new String(categories[i]));
+            itemNames.add(new String(categories[i]));
         }
     }
     
@@ -82,5 +90,11 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         // TODO
         
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dbAdapter.close();
     }
 }

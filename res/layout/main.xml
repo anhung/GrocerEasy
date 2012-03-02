@@ -19,12 +19,12 @@
             android:id="@+id/b_newList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/newList" />
+            android:text="@string/newItem" />
 
     </LinearLayout>
 
     <ListView
-        android:id="@+id/lv_groceryListList"
+        android:id="@+id/lv_groceryList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
     </ListView>
