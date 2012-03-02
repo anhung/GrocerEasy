@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 public class GrocerEasy extends Activity implements OnClickListener, OnItemClickListener {
     
-    private Button b_newList;                       // to create new list
+    private Button b_newItem;                       // to create new list
     private ListView myListView;                    // for displaying items
     private ArrayList<FoodItem> foodItems;          // list of food item objects
     private ArrayList<String> itemNames;            // list of item names
@@ -31,21 +31,24 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        b_newList = (Button) findViewById(R.id.b_newList);
+        b_newItem = (Button) findViewById(R.id.b_newList);
+        b_newItem.setOnClickListener(this);
         
         // Set up the list of items
         itemNames = new ArrayList<String>();
         foodItems = new ArrayList<FoodItem>();
         myListView = (ListView) findViewById(R.id.lv_groceryList);
         itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemNames);
-        myListView.setAdapter(itemAdapter);  
+        myListView.setAdapter(itemAdapter); 
+        myListView.setOnItemClickListener(this);        
         
         // Set up database
         dbAdapter = new MyDBAdapter(this);
         dbAdapter.open();
         dbCursor = dbAdapter.getAllEntries();
         startManagingCursor(dbCursor);
-        updateArray();
+        dbAdapter.removeItem(new FoodItem("Cheese", 6.0, "blah", "blah"));
+        //updateArray();
     }
     
     private void updateArray() {
@@ -57,22 +60,13 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
                 String name = new String(dbCursor.getString(dbAdapter.FNAME_COLUMN));
                 double quantity = dbCursor.getDouble(dbAdapter.FQTY_COLUMN);
                 String measurement = new String(dbCursor.getString(dbAdapter.FMEASURE_COLUMN));
-                String notes = new String(dbCursor.getString(dbAdapter.FNOTES_COLUMN));
-                FoodItem fi = new FoodItem(name, quantity, measurement, notes);
+                //String notes = new String(dbCursor.getString(dbAdapter.FNOTES_COLUMN));
+                FoodItem fi = new FoodItem(name, quantity, measurement, "test");
                 foodItems.add(fi);
-                itemNames.add(fi.getName());
+                itemNames.add(name);
             } while (dbCursor.moveToNext());
         }
         itemAdapter.notifyDataSetChanged();
-    }
-    
-    /**
-     * Helper function to set the click listeners for 
-     * the views that need them.
-     */
-    private void setupListeners() {
-        b_newList.setOnClickListener(this);
-        myListView.setOnItemClickListener(this);
     }
 
     /**
@@ -80,7 +74,17 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
      */
     @Override
     public void onClick(View v) {
-        // TODO
+        if ( ((Button)v).equals(b_newItem)) {
+            FoodItem fi = new FoodItem("Cheese", 75.2, "ounces", "this is a note");
+            addNewItem(fi);
+        }
+    }
+    
+    private void addNewItem(FoodItem fi) {
+        foodItems.add(fi);
+        itemNames.add(fi.getName());
+        dbAdapter.insertItem(fi);
+        updateArray();
     }
 
     /**

@@ -15,22 +15,22 @@ public class MyDBAdapter {
     public static final String KEY_ID = "_id";
     
     // COLUMNS
-    // key_id | fname | fqty | fmeasure | fnotes
+    // fname | fqty | fmeasure | fnotes
     public static final String KEY_FNAME = "fname";
-    public static final int FNAME_COLUMN = 1;
+    public static final int FNAME_COLUMN = 0;
     public static final String KEY_FQTY = "fqty";
-    public static final int FQTY_COLUMN = 2;
+    public static final int FQTY_COLUMN = 1;
     public static final String KEY_FMEASURE = "fmeasure";
-    public static final int FMEASURE_COLUMN = 3;
+    public static final int FMEASURE_COLUMN = 2;
     public static final String KEY_FNOTES = "fnotes";
-    public static final int FNOTES_COLUMN = 4;
+    public static final int FNOTES_COLUMN = 3;
     
     private static final String DATABASE_CREATE = "create table " + DATABASE_TABLE + 
         " (" + KEY_ID + " integer primary key autoincrement, " +
                KEY_FNAME + " varchar(50), " + 
                KEY_FQTY + " numeric(4,2), " + 
                KEY_FMEASURE + " varchar(50), " + 
-               KEY_FNOTES + " varchar(255)" + ");";
+               KEY_FNOTES + " varchar(50));";
     
     private SQLiteDatabase db;
     private final Context context;
@@ -60,7 +60,6 @@ public class MyDBAdapter {
     }
     
     public boolean removeItem(FoodItem item) {
-        // DELETE FROM mainTable WHERE fname like 'item.getName()'
         String where = new String(KEY_FNAME + " like \'" + item.getName() + "\'");
         return db.delete(DATABASE_TABLE, where, null) > 0;
     }
@@ -71,14 +70,10 @@ public class MyDBAdapter {
     }
     
     public FoodItem getItem(String fname) {
-        // SELECT fqty, fmeasure, fnotes
-        // FROM mainTable
-        // WHERE fname like ......the argument fname?
         String[] cols = {KEY_FQTY, KEY_FMEASURE, KEY_FNOTES };
         String where = new String(KEY_FNAME + " like \'" + fname + "\'");
         Cursor c = db.query(DATABASE_TABLE, cols, where, null, null, null, null);
         if (c.moveToFirst()) {
-            // name, quantity, measurement, notes
             return new FoodItem(c.getString(FNAME_COLUMN), c.getDouble(FQTY_COLUMN),
                     c.getString(FMEASURE_COLUMN), c.getString(FNOTES_COLUMN));
         }
