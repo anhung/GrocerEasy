@@ -19,7 +19,7 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
     private Button b_newItem;                       // to create new list
     private ListView myListView;                    // for displaying items
     private ArrayList<FoodItem> foodItems;          // list of food item objects
-    private ArrayList<String> itemNames;            // list of item names
+    private ArrayList<String> itemDisplay;          // string to display on listview
     private ArrayAdapter<String> itemAdapter;       // adapter for itemNames
     private MyDBAdapter dbAdapter;                  // adapter for database
     private Cursor dbCursor;                        // cursor!
@@ -35,10 +35,10 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
         b_newItem.setOnClickListener(this);
         
         // Set up the list of items
-        itemNames = new ArrayList<String>();
+        itemDisplay = new ArrayList<String>();
         foodItems = new ArrayList<FoodItem>();
         myListView = (ListView) findViewById(R.id.lv_groceryList);
-        itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemNames);
+        itemAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, itemDisplay);
         myListView.setAdapter(itemAdapter); 
         myListView.setOnItemClickListener(this);        
         
@@ -47,23 +47,23 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
         dbAdapter.open();
         dbCursor = dbAdapter.getAllEntries();
         startManagingCursor(dbCursor);
-        dbAdapter.removeItem(new FoodItem("Cheese", 6.0, "blah", "blah"));
-        //updateArray();
+        //dbAdapter.removeItem(new FoodItem());
+        updateArray();
     }
     
     private void updateArray() {
         dbCursor = dbAdapter.getAllEntries();
         foodItems.clear();
-        itemNames.clear();
+        itemDisplay.clear();
         if (dbCursor.moveToFirst()) {
             do {
                 String name = new String(dbCursor.getString(dbAdapter.FNAME_COLUMN));
                 double quantity = dbCursor.getDouble(dbAdapter.FQTY_COLUMN);
                 String measurement = new String(dbCursor.getString(dbAdapter.FMEASURE_COLUMN));
-                //String notes = new String(dbCursor.getString(dbAdapter.FNOTES_COLUMN));
-                FoodItem fi = new FoodItem(name, quantity, measurement, "test");
+                String notes = new String(dbCursor.getString(dbAdapter.FNOTES_COLUMN));
+                FoodItem fi = new FoodItem(name, quantity, measurement, notes);
                 foodItems.add(fi);
-                itemNames.add(name);
+                itemDisplay.add(fi.getDisplayString());
             } while (dbCursor.moveToNext());
         }
         itemAdapter.notifyDataSetChanged();
@@ -75,14 +75,14 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
     @Override
     public void onClick(View v) {
         if ( ((Button)v).equals(b_newItem)) {
-            FoodItem fi = new FoodItem("Cheese", 75.2, "ounces", "this is a note");
+            FoodItem fi = new FoodItem();
             addNewItem(fi);
         }
     }
     
     private void addNewItem(FoodItem fi) {
         foodItems.add(fi);
-        itemNames.add(fi.getName());
+        itemDisplay.add(fi.getName());
         dbAdapter.insertItem(fi);
         updateArray();
     }
@@ -92,7 +92,10 @@ public class GrocerEasy extends Activity implements OnClickListener, OnItemClick
      */
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        // TODO
+        foodItems.clear();
+        itemDisplay.clear();
+        dbAdapter.removeAllEntries();
+        updateArray();
         
     }
     

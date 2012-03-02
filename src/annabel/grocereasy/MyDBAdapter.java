@@ -80,6 +80,10 @@ public class MyDBAdapter {
         return null;
     }
     
+    public boolean removeAllEntries() {
+        return db.delete(DATABASE_TABLE, null, null) > 0;
+    }
+    
     
     public boolean updateEntry(String fname) {
         // TODO

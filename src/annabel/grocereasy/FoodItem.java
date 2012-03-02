@@ -12,9 +12,9 @@ public class FoodItem {
      * TODO: Get rid of this for release!
      */
     public FoodItem() {
-        m_name = new String("Banana");
+        m_name = new String("banana");
         m_quantity = 2;
-        m_measurement = new String("piece");
+        m_measurement = new String("pieces");
         m_notes = new String("Lalalala these are some notes!");
     }
     
@@ -102,6 +102,10 @@ public class FoodItem {
      */
     public void setNotes(String notes) {
         m_notes = new String(notes);
+    }
+    
+    public String getDisplayString() {
+        return new String(m_quantity + " " + m_measurement + " " + m_name);
     }
     
     @Override
