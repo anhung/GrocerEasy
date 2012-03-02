@@ -4,10 +4,29 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/button_newShoppingList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New List" />
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/tv_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name" />
+
+        <Button
+            android:id="@+id/b_newList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/newList" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_groceryListList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>
