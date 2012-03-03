@@ -64,6 +64,11 @@ public class MyDBAdapter {
         return db.delete(DATABASE_TABLE, where, null) > 0;
     }
     
+    public boolean removeItem(int position) {
+        String where = new String(KEY_ID + " = " + position);
+        return db.delete(DATABASE_TABLE, where, null) > 0;
+    }
+    
     public Cursor getAllEntries() {
         String[] cols = {KEY_FNAME, KEY_FQTY, KEY_FMEASURE, KEY_FNOTES };
         return db.query(DATABASE_TABLE, cols, null, null, null, null, null);
